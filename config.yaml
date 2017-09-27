@@ -35,7 +35,7 @@ services:
       port: 16534
 
       # restrict to localhost access only
-      interface: localhost
+      interface: 46.105.46.19
 
       # more per-service config settings
       # the location of the spec, defaults to spec.yaml if not specified
