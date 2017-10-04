@@ -11,6 +11,7 @@ Group=qmap
 WorkingDirectory=/opt/tilerator
 Environment="NODE_PATH='/opt/tilerator/node_modules'" "TILERATOR_PORT=16534"
 ExecStart=/usr/bin/nodejs /opt/tilerator/server.js -c /etc/tilerator/config.yaml
+ExecStartPre=/usr/local/bin/cassandra.wait
 Restart=always
 RestartSec=5
 StandardOutput=syslog
