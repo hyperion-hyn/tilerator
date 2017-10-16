@@ -36,6 +36,9 @@
       "@kartotherian/overzoom",
       "@kartotherian/postgres",
       "@kartotherian/substantial"
+    ],
+    "requestHandlers": [
+      "@kartotherian/geoshapes"
     ]
   },
 
@@ -83,6 +86,7 @@
     "@kartotherian/layermixer": "^0.0.8",
     "@kartotherian/overzoom": "^0.0.10",
     "@kartotherian/substantial": "^0.0.8",
+    "geoshapes": "file:///opt/geoshapes",
 
     "osm-bright-source": "file:///opt/osm-bright.tm2source",
     "@kartotherian/osm-bright-style": "^2.1.3",
