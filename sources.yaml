@@ -1,21 +1,18 @@
-# Generates vtiles from database
 gen:
   public: true
   formats: [pbf]
   uri: bridge://
-  xml:
-    npm: ["@kartotherian/osm-bright-source", "data.xml"]
+  xml: "/etc/tilerator/data_tm2source.xml"
   xmlSetDataSource:
     if:
       dbname: gis
-      host: ''
+      host: 'localhost'
       type: postgis
     set:
       host: localhost
       user: {var: osmdb-user}
       password: {var: osmdb-pswd}
 
-# View tiles as generated directly from the database. Don't view zoom0-5
 genview:
   public: true
   formats: [png,json,headers,svg,jpeg]
@@ -25,7 +22,7 @@ genview:
   maxwidth: 2048
   uri: vector://
   xml:
-    loader: "@kartotherian/osm-bright-style"
+    npmpath: ["@mapbox/mapbox-studio-osm-bright", "project.xml"]
   xmlSetParams:
     source: {ref: gen}
 
@@ -53,7 +50,7 @@ v2view:
   maxwidth: 2048
   uri: vector://
   xml:
-    loader: "@kartotherian/osm-bright-style"
+    npmpath: ["@mapbox/mapbox-studio-osm-bright", "project.xml"]
   xmlSetParams:
     source: {ref: v2}
 
@@ -84,7 +81,7 @@ osm-intl:
   maxwidth: 2048
   uri: vector://
   xml:
-    loader: "@kartotherian/osm-bright-style"
+    npmpath: ["@mapbox/mapbox-studio-osm-bright", "project.xml"]
   xmlSetParams:
     source: {ref: oz}
 
@@ -107,7 +104,7 @@ mixview:
   maxwidth: 2048
   uri: vector://
   xml:
-    loader: "@kartotherian/osm-bright-style"
+    npmpath: ["@mapbox/mapbox-studio-osm-bright", "project.xml"]
   xmlSetParams:
     source: {ref: mix}
 
