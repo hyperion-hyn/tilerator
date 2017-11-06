@@ -172,7 +172,8 @@ function startup(app) {
             app.use('/', express.static(pathLib.resolve(__dirname, '../static'), {index: 'admin.html'}));
             return server.init({
                 core: core,
-                app: app
+                app: app,
+                requestHandlers: core.loadNpmModules('requestHandlers')
             });
         }
     }).catch(err => {

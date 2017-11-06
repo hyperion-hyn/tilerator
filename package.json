@@ -79,15 +79,14 @@
     "@kartotherian/babel": "^0.0.7",
     "@kartotherian/cassandra": "^0.0.12",
     "@kartotherian/postgres": "^0.0.10",
-    "@kartotherian/demultiplexer": "^0.0.10",
+    "demultiplexer": "git+https://github.com/QwantResearch/demultiplexer.git",
     "@kartotherian/layermixer": "^0.0.8",
     "@kartotherian/overzoom": "^0.0.10",
-    "@kartotherian/substantial": "^0.0.8",
+    "@kartotherian/substantial": "git+https://github.com/kartotherian/substantial.git#master",
 
-    "@kartotherian/osm-bright-source": "^0.0.4",
-    "@kartotherian/osm-bright-style": "^2.1.3",
+    "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
 
-    "@kartotherian/jobprocessor": "^0.0.15"
+    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git"
   },
   "optionalDependencies": {
     "bunyan-prettystream": "*"
