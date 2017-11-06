@@ -82,7 +82,7 @@
     "demultiplexer": "git+https://github.com/QwantResearch/demultiplexer.git",
     "@kartotherian/layermixer": "^0.0.8",
     "@kartotherian/overzoom": "^0.0.10",
-    "@kartotherian/substantial": "git+https://github.com/kartotherian/substantial.git#master",
+    "@kartotherian/substantial": "git+https://github.com/amatissart/substantial.git#fixMaxsize",
 
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
 
