@@ -61,7 +61,7 @@
     "htcp-purge": "^0.1.2",
     "jade": "^1.11.0",
     "kue": "^0.11.0",
-    "kue-ui": "git+https://github.com/nyurik/kue-ui.git",
+    "kue-ui": "git+https://github.com/nyurik/kue-ui.git#67cf083",
 
     "mapnik": "~3.5.0",
     "tilelive": "~5.12.2",
@@ -77,16 +77,16 @@
 
     "@kartotherian/autogen": "^0.0.10",
     "@kartotherian/babel": "^0.0.7",
-    "@kartotherian/cassandra": "^0.0.12",
+    "@kartotherian/cassandra": "git+https://github.com/kartotherian/cassandra.git#8f46b73",
     "@kartotherian/postgres": "^0.0.10",
     "demultiplexer": "git+https://github.com/QwantResearch/demultiplexer.git",
     "@kartotherian/layermixer": "^0.0.8",
     "@kartotherian/overzoom": "^0.0.10",
-    "@kartotherian/substantial": "git+https://github.com/amatissart/substantial.git#fixMaxsize",
+    "@kartotherian/substantial": "git+https://github.com/kartotherian/substantial.git#b790edc",
 
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
 
-    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git"
+    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#7ae7985"
   },
   "optionalDependencies": {
     "bunyan-prettystream": "*"
