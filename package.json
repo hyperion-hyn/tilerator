@@ -86,7 +86,7 @@
 
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
 
-    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#7ae7985"
+    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#5ff0082"
   },
   "optionalDependencies": {
     "bunyan-prettystream": "*"
