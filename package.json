@@ -35,7 +35,8 @@
       "@kartotherian/layermixer",
       "@kartotherian/overzoom",
       "@kartotherian/postgres",
-      "@kartotherian/substantial"
+      "@kartotherian/substantial",
+      "@mapbox/mbtiles"
     ]
   },
 
@@ -86,7 +87,8 @@
 
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
 
-    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#5ff0082"
+    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#5ff0082",
+    "@mapbox/mbtiles": "^0.9.0"
   },
   "optionalDependencies": {
     "bunyan-prettystream": "*"
