@@ -27,7 +27,7 @@
   "kartotherian": {
     "registerSourceLibs": [
       "tilelive-bridge",
-      "tilelive-vector",
+      "@kartotherian/tilelive-vector",
       "@kartotherian/autogen",
       "@kartotherian/cassandra",
       "@kartotherian/demultiplexer",
