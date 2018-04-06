@@ -73,7 +73,7 @@
     "@kartotherian/cassandra": "^0.0.15",
     "@kartotherian/postgres": "^0.0.11",
     "@kartotherian/layermixer": "^0.0.8",
-    "@kartotherian/overzoom": "^0.0.16",
+    "@kartotherian/overzoom": "^0.0.10",
     "@kartotherian/substantial": "^0.0.10",
     "@kartotherian/jobprocessor": "^0.0.18",
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
