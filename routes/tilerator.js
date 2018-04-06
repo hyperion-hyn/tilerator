@@ -133,7 +133,7 @@ function startup(app) {
     }
     core.metrics.increment('init');
     const sources = new core.Sources();
-    return sources.init(app.conf);
+    return sources.init(app.conf.variables, app.conf.sources);
   }).then((sources) => {
     core.setSources(sources);
     let jobHandler;
