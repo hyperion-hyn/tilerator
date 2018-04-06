@@ -1,11 +1,11 @@
 {
   "name": "tilerator",
-  "version": "0.0.22",
+  "version": "0.0.24",
   "description": "Map tiles pre-generation service",
   "main": "./app.js",
   "scripts": {
     "start": "service-runner",
-    "test": "mocha",
+    "test": "grunt test",
     "docker-start": "service-runner docker-start",
     "docker-test": "service-runner docker-test",
     "coverage": "istanbul cover _mocha -- -R spec"
@@ -24,7 +24,6 @@
   "license": "Apache-2.0",
   "bugs": "https://github.com/kartotherian/tilerator/issues",
   "homepage": "https://github.com/kartotherian/tilerator",
-
   "kartotherian": {
     "registerSourceLibs": [
       "tilelive-bridge",
@@ -50,64 +49,72 @@
     "express": "^4.13.4",
     "js-yaml": "^3.8.2",
     "preq": "^0.5.2",
-    "service-runner": "^2.2.5"
-    ,
+    "service-runner": "^2.2.5",
     "heapdump": "*",
-
     "minimist": "0.2.*",
     "yargs": "^5.0.0",
     "underscore": "^1.8.3",
     "why-is-node-running": "^1.2.2",
-
     "htcp-purge": "^0.1.2",
     "jade": "^1.11.0",
     "kue": "^0.11.0",
     "kue-ui": "git+https://github.com/nyurik/kue-ui.git#67cf083",
-
     "mapnik": "~3.5.0",
     "tilelive": "~5.12.2",
     "tilelive-bridge": "~2.3.1",
-    "tilelive-vector": "~3.9.3",
-
     "quadtile-index": "^0.0.6",
-    "@kartotherian/err": "^0.0.3",
+    "@kartotherian/tilelive-vector": "~3.9.6",
+    "@kartotherian/err": "^0.0.4",
     "@kartotherian/input-validator": "^0.0.6",
-
-    "@kartotherian/core": "^0.0.21",
-    "@kartotherian/server": "^0.0.16",
-
+    "@kartotherian/core": "^0.0.27",
+    "@kartotherian/server": "^0.0.25",
     "@kartotherian/autogen": "^0.0.10",
     "@kartotherian/babel": "^0.0.7",
-    "@kartotherian/cassandra": "git+https://github.com/kartotherian/cassandra.git#8f46b73",
-    "@kartotherian/postgres": "^0.0.10",
-    "demultiplexer": "git+https://github.com/QwantResearch/demultiplexer.git",
+    "@kartotherian/cassandra": "^0.0.15",
+    "@kartotherian/postgres": "^0.0.11",
     "@kartotherian/layermixer": "^0.0.8",
-    "@kartotherian/overzoom": "^0.0.10",
-    "@kartotherian/substantial": "git+https://github.com/kartotherian/substantial.git#b790edc",
-
+    "@kartotherian/overzoom": "^0.0.16",
+    "@kartotherian/substantial": "^0.0.10",
+    "@kartotherian/jobprocessor": "^0.0.18",
     "@mapbox/mapbox-studio-osm-bright": "git+https://github.com/openmaptiles/mapbox-studio-osm-bright.tm2.git",
-
-    "@kartotherian/jobprocessor": "git+https://github.com/kartotherian/jobprocessor.git#5ff0082",
-    "@mapbox/mbtiles": "^0.9.0"
+    "@mapbox/mbtiles": "^0.9.0",
+    "demultiplexer": "git+https://github.com/QwantResearch/demultiplexer.git"
   },
   "optionalDependencies": {
     "bunyan-prettystream": "*"
   },
   "devDependencies": {
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-config-kartotherian": "^0.0.5",
     "extend": "^3.0.0",
+    "grunt": "^1.0.2",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^20.1.0",
+    "grunt-mocha-test": "^0.13.3",
     "istanbul": "^0.4.3",
-    "mocha": "^3.2.0",
-    "mocha-jshint": "^2.3.1",
+    "mocha": "^5.0.4",
     "mocha-lcov-reporter": "^1.2.0",
-    "swagger-router": "^0.4.2"
+    "swagger-router": "^0.4.2",
+    "tilelive-file": "~0.0.3",
+    "tilelive-http": "~0.13.0",
+    "wait-as-promised": "^1.0.2"
   },
   "deploy": {
     "node": "6.11",
     "target": "debian",
-    "install_opts": ["--build-from-source=mapnik", "--fallback-to-build=false"] ,
+    "install_opts": [
+      "--build-from-source=mapnik",
+      "--fallback-to-build=false"
+    ],
     "dependencies": {
-      "_all": ["libcairo2-dev", "libgif-dev", "libpango1.0-dev"],
-      "ubuntu": ["libjpeg62-dev"],
+      "_all": [
+        "libcairo2-dev",
+        "libgif-dev",
+        "libpango1.0-dev"
+      ],
+      "ubuntu": [
+        "libjpeg62-dev"
+      ],
       "debian": [
         "libjpeg62-turbo-dev",
         "fonts-dejavu",
@@ -127,7 +134,11 @@
           "repo_url": "https://apt.wikimedia.org/wikimedia",
           "release": "jessie-wikimedia",
           "pool": "backports",
-          "packages": [ "libmapbox-variant-dev", "libmapnik-dev", "mapnik-utils" ]
+          "packages": [
+            "libmapbox-variant-dev",
+            "libmapnik-dev",
+            "mapnik-utils"
+          ]
         }
       ]
     }
