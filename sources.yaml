@@ -1,0 +1,75 @@
+# Generates vtiles from database
+
+### Basemap without POIs
+gen_basemap:
+  public: true
+  formats: [pbf]
+  uri: tmsource://
+  yaml: "generated_base_tm2source.yml"
+  yamlSetDataSource:
+    if:
+      dbname: gis
+      host: 'localhost'
+      type: postgis
+    set:
+      host: {var: osmdb-host}
+      user: {var: osmdb-user}
+      password: {var: osmdb-pswd}
+
+basemap:
+  public: true
+  formats: [pbf]
+  uri: cassandra://
+  params:
+    maxzoom: 15
+    keyspace: basemap
+    cp: {var: cassandra-servers}
+    username: {var: cassandra-user}
+    password: {var: cassandra-pswd}
+    repfactor: 4
+    durablewrite: 0
+    createIfMissing: true
+    copyInfoFrom: {ref: gen_basemap}
+
+substbasemap:  # only for basemap
+  public: true
+  formats: [pbf]
+  uri: substantial://
+  params:
+    source: {ref: gen_basemap}
+    minzoom: 10
+    maxsize: 100
+    layers: [water, landuse, landcover]
+
+# Generate POIs layer
+gen_poi:
+  public: true
+  formats: [pbf]
+  uri: tmsource://
+  yaml: "generated_poi_tm2source.yml"
+  yamlSetDataSource:
+    if:
+      dbname: gis
+      host: 'localhost'
+      type: postgis
+    set:
+      host: {var: osmdb-host}
+      user: {var: osmdb-user}
+      password: {var: osmdb-pswd}
+
+poi:
+  public: true
+  formats: [pbf]
+  uri: cassandra://
+  params:
+    maxzoom: 15
+    minzoom: 10
+    keyspace: poi
+    cp: {var: cassandra-servers}
+    username: {var: cassandra-user}
+    password: {var: cassandra-pswd}
+    repfactor: 4
+    durablewrite: 0
+    createIfMissing: true
+    copyInfoFrom: {ref: gen_poi}
+
