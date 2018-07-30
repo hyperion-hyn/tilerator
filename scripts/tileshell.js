@@ -179,27 +179,26 @@ tilerator.bootstrap(app).then(() => {
 }).then((sources) => {
   core.setSources(sources);
   if (args.j) {
-    const job = common.paramsToJob(args.j, sources);
+    return common.paramsToJob(args.j, sources).then(job => {
+      if (args.dumptiles) {
+        const jp = new JobProcessor(sources, { data: job }, app.metrics);
 
-    if (args.dumptiles) {
-      const jp = new JobProcessor(sources, { data: job }, app.metrics);
+        const outputStream = fs.createWriteStream(args.dumptiles, { flags: args.dumpoverride ? 'w' : 'wx' });
 
-      const outputStream = fs.createWriteStream(args.dumptiles, { flags: args.dumpoverride ? 'w' : 'wx' });
+        jp.initSources();
+        const iterator = jp.createMainIterator();
 
-      jp.initSources();
-      const iterator = jp.createMainIterator();
+        const opt = {
+          iterator, outputStream, zoom: job.zoom, rawidx: args.dumprawidx,
+        };
+        return dumpTiles(opt).then(() => outputStream.endAsync());
+      }
 
-      const opt = {
-        iterator, outputStream, zoom: job.zoom, rawidx: args.dumprawidx,
-      };
-      return dumpTiles(opt).then(() => outputStream.endAsync());
-    }
-
-    // Make sure not to start the kueui
-    app.conf.daemonOnly = true;
-    const queue = new Queue(app);
-
-    return common.enqueJob(queue, job, args.j);
+      // Make sure not to start the kueui
+      app.conf.daemonOnly = true;
+      const queue = new Queue(app);
+      return common.enqueJob(queue, job, args.j);
+    })
   }
   return undefined;
 }).catch((err) => {
