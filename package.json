@@ -72,7 +72,7 @@
     "@kartotherian/babel": "^0.2.6",
     "@kartotherian/postgres": "^0.0.11",
     "@kartotherian/layermixer": "^0.0.8",
-    "@kartotherian/overzoom": "^0.0.10",
+    "@kartotherian/overzoom": "^0.0.16",
     "@kartotherian/substantial": "^0.0.10",
     "@kartotherian/osm-bright-source": "^1.0.1",
     "@kartotherian/osm-bright-style": "^4.0.1",

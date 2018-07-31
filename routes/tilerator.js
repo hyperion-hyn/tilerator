@@ -94,10 +94,9 @@ function onEnque(req, res) {
       return updateSourcesFromYaml(req.body);
     }
     return undefined;
-    })
+  })
     .then(() => common.paramsToJob(params, core.getSources()))
-    .then(job => common.enqueJob(queue, job, params))
-  );
+    .then(job => common.enqueJob(queue, job, params)));
 }
 
 function onStop(req, res) {
@@ -132,7 +131,7 @@ function startup(app) {
     }
     core.metrics.increment('init');
     const sources = new core.Sources();
-    return sources.init(app.conf.variables, app.conf.sources);
+    return sources.init(app.conf);
   }).then((sources) => {
     core.setSources(sources);
     let jobHandler;
@@ -174,7 +173,6 @@ function startup(app) {
       return server.init({
         core,
         app,
-        requestHandlers: core.loadNpmModules('requestHandlers')
       });
     }
     return undefined;
