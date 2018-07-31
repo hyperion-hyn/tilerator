@@ -14,7 +14,8 @@ const tilerator = require('../routes/tilerator');
 const Queue = require('../lib/Queue');
 const common = require('../lib/common');
 
-const { JobProcessor } = jplib;
+const { JobProcessor, Job } = jplib;
+const MBTILES_SOURCE_ID = 'mbtiles-file';
 
 /**
  * Convert relative path to absolute, assuming current file is one
@@ -117,6 +118,13 @@ const args = yargs
       describe: 'be verbose',
       type: 'boolean',
     },
+    writeMbtiles: {
+      describe: 'File that will be used as .mbtiles storage (overwrites j.storageId and enforces j.parts=1) \
+                 Jobs will be processed synchronously.',
+      type: 'string',
+      nargs: 1,
+      coerce: normalizePath
+    },
   })
   .help('h')
   .alias('h', 'help')
@@ -172,6 +180,33 @@ if (args.dumptiles) {
     args.j.storageId = args.j.generatorId;
   }
 }
+if (args.writeMbtiles) {
+  app.conf.sources.push({
+      [MBTILES_SOURCE_ID]:{
+          'uri':'mbtiles://' + args.writeMbtiles,
+          'formats': ['pbf']
+      }
+  })
+  args.j['storageId'] = MBTILES_SOURCE_ID
+  args.j['parts'] = 1
+}
+
+let processSyncJob = function(j, sources){
+  console.log('Processing job Z='+j.zoom, ' size='+j.size);
+  let jp = new JobProcessor(sources, {data: j}, app.metrics);
+  jp.initSources();
+  jp.tileStore.startWriting(() => undefined);
+  jp.initSources = (() => undefined); // Ugly hack so that sources are not reinitialized
+  return new Promise(function(resolve, reject) {
+    jp.runAsync()
+      .then(()=>
+          jp.tileStore.stopWriting(()=>{
+              console.log('Sync job done');
+              resolve();
+      }))
+      .catch(reject);
+  });
+};
 
 tilerator.bootstrap(app).then(() => {
   const sources = new core.Sources();
@@ -180,9 +215,16 @@ tilerator.bootstrap(app).then(() => {
   core.setSources(sources);
   if (args.j) {
     return common.paramsToJob(args.j, sources).then(job => {
+
+      if (args.writeMbtiles) {
+        job = new Job(job);
+        let jobs = job.expandJobs();
+        console.log(jobs.length + ' jobs to run, writing to ' + args.writeMbtiles);
+        return Promise.resolve(jobs).each(j => processSyncJob(j, sources));
+      }
+
       if (args.dumptiles) {
         const jp = new JobProcessor(sources, { data: job }, app.metrics);
-
         const outputStream = fs.createWriteStream(args.dumptiles, { flags: args.dumpoverride ? 'w' : 'wx' });
 
         jp.initSources();

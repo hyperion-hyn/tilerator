@@ -72,4 +72,3 @@ poi:
     durablewrite: 0
     createIfMissing: true
     copyInfoFrom: {ref: gen_poi}
-
