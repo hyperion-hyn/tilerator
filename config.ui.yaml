@@ -73,14 +73,16 @@ services:
         osmdb-pswd: ''
 
       modules:
-      - tilelive-bridge
+      - tilelive-tmstyle
       - "@kartotherian/autogen"
       - "@kartotherian/cassandra"
       - "@kartotherian/layermixer"
       - "@kartotherian/overzoom"
       - "@kartotherian/postgres"
       - "@kartotherian/substantial"
+      - "@kartotherian/tilelive-tmsource"
       - "@kartotherian/tilelive-vector"
+      - "@kartotherian/babel"
 
       # If true, do not enable admin interface
       daemonOnly: false

@@ -119,11 +119,11 @@ const args = yargs
       type: 'boolean',
     },
     writeMbtiles: {
-      describe: 'File that will be used as .mbtiles storage (overwrites j.storageId and enforces j.parts=1) \
-                 Jobs will be processed synchronously.',
+      describe: 'File that will be used as .mbtiles storage (overwrites j.storageId and enforces j.parts=1).\n'
+              + 'Jobs will be processed synchronously.',
       type: 'string',
       nargs: 1,
-      coerce: normalizePath
+      coerce: normalizePath,
     },
   })
   .help('h')
@@ -182,66 +182,65 @@ if (args.dumptiles) {
 }
 if (args.writeMbtiles) {
   app.conf.sources.push({
-      [MBTILES_SOURCE_ID]:{
-          'uri':'mbtiles://' + args.writeMbtiles,
-          'formats': ['pbf']
-      }
-  })
-  args.j['storageId'] = MBTILES_SOURCE_ID
-  args.j['parts'] = 1
+    [MBTILES_SOURCE_ID]: {
+      uri: `mbtiles://${args.writeMbtiles}`,
+      formats: ['pbf'],
+    },
+  });
+  args.j.storageId = MBTILES_SOURCE_ID;
+  args.j.parts = 1;
 }
 
-let processSyncJob = function(j, sources){
-  console.log('Processing job Z='+j.zoom, ' size='+j.size);
-  let jp = new JobProcessor(sources, {data: j}, app.metrics);
+function processSyncJob(j, sources) {
+  // eslint-disable-next-line no-console
+  console.log(`Processing job Z=${j.zoom}`, ` size=${j.size}`);
+  const jp = new JobProcessor(sources, { data: j }, app.metrics);
   jp.initSources();
   jp.tileStore.startWriting(() => undefined);
   jp.initSources = (() => undefined); // Ugly hack so that sources are not reinitialized
-  return new Promise(function(resolve, reject) {
+  return new Promise(((resolve, reject) => {
     jp.runAsync()
-      .then(()=>
-          jp.tileStore.stopWriting(()=>{
-              console.log('Sync job done');
-              resolve();
-      }))
+      .then(() =>
+        jp.tileStore.stopWriting(() => {
+          resolve();
+        }))
       .catch(reject);
-  });
-};
+  }));
+}
 
 tilerator.bootstrap(app).then(() => {
   const sources = new core.Sources();
-  return sources.init(app.conf.variables, app.conf.sources);
+  return sources.init(app.conf);
 }).then((sources) => {
   core.setSources(sources);
   if (args.j) {
-    let job = common.paramsToJob(args.j, sources);
+    return common.paramsToJob(args.j, sources).then((job) => {
+      if (args.writeMbtiles) {
+        const jpJob = new Job(job);
+        const jobs = jpJob.expandJobs();
+        // eslint-disable-next-line no-console
+        console.log(`${jobs.length} jobs to run, writing to ${args.writeMbtiles}`);
+        return Promise.resolve(jobs).each(j => processSyncJob(j, sources));
+      }
 
-    if (args.writeMbtiles) {
-      job = new Job(job);
-      let jobs = job.expandJobs();
-      console.log(jobs.length + ' jobs to run, writing to ' + args.writeMbtiles);
-      return Promise.resolve(jobs).each(j => processSyncJob(j, sources));
-    }
+      if (args.dumptiles) {
+        const jp = new JobProcessor(sources, { data: job }, app.metrics);
+        const outputStream = fs.createWriteStream(args.dumptiles, { flags: args.dumpoverride ? 'w' : 'wx' });
 
-    if (args.dumptiles) {
-      const jp = new JobProcessor(sources, { data: job }, app.metrics);
+        jp.initSources();
+        const iterator = jp.createMainIterator();
 
-      const outputStream = fs.createWriteStream(args.dumptiles, { flags: args.dumpoverride ? 'w' : 'wx' });
+        const opt = {
+          iterator, outputStream, zoom: job.zoom, rawidx: args.dumprawidx,
+        };
+        return dumpTiles(opt).then(() => outputStream.endAsync());
+      }
 
-      jp.initSources();
-      const iterator = jp.createMainIterator();
-
-      const opt = {
-        iterator, outputStream, zoom: job.zoom, rawidx: args.dumprawidx,
-      };
-      return dumpTiles(opt).then(() => outputStream.endAsync());
-    }
-
-    // Make sure not to start the kueui
-    app.conf.daemonOnly = true;
-    const queue = new Queue(app);
-
-    return common.enqueJob(queue, job, args.j);
+      // Make sure not to start the kueui
+      app.conf.daemonOnly = true;
+      const queue = new Queue(app);
+      return common.enqueJob(queue, job, args.j);
+    });
   }
   return undefined;
 }).catch((err) => {
