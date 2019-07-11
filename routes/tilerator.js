@@ -2,6 +2,7 @@ const pathLib = require('path');
 const Promise = require('bluebird');
 const _ = require('underscore');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const yaml = require('js-yaml');
 const Queue = require('../lib/Queue');
 const EventService = require('../lib/EventService');
@@ -13,6 +14,7 @@ const server = require('@kartotherian/server');
 const info = require('../package.json');
 const { JobProcessor } = require('@kartotherian/jobprocessor');
 const bodyParser = require('body-parser');
+const async = require('async');
 
 let jobProcessor;
 let queue;
@@ -101,6 +103,29 @@ function onEnque(req, res) {
     .then(job => common.enqueJob(queue, job, params)));
 }
 
+function onUpload(req, res) {
+  if (!req.files) {
+    return res.status(500).type('application/json').send(JSON.stringify({error: 'No files were uploaded.'}));
+  }
+
+  async.each(req.files.tileFiles, (file, callback) => {
+    let fileName = file.name;
+    file.mv(pathLib.join(req.body.destDir, fileName), function(err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback();
+      }
+    });
+  }, err => {
+    if (err) {
+      res.status(500).type('application/json').send(JSON.stringify({error: err.message, stack: err.stack}));
+    } else {
+      res.type('application/json').send('File uploaded!');
+    }
+  });
+}
+
 function onStop(req, res) {
   const seconds = (req.params.seconds || 60);
   reportAsync(res, () => {
@@ -177,8 +202,14 @@ function startup(app) {
       const textParser = bodyParser.text();
       app.use('/sources', textParser, onSources);
 
+      app.use(fileUpload({
+        createParentPath: true,
+        preserveExtension: true
+      }));
+
       const router = express.Router();
       router.post('/add', textParser, onEnque);
+      router.post('/upload', onUpload);
       router.post('/stop', onStop);
       router.post('/stop/:seconds(\\d+)', onStop);
       router.post('/cleanup', onCleanup);
